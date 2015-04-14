@@ -26,6 +26,9 @@
 	<!-- Dropdown CSS -->
     <link href="../assets/css/bootstrap-select.min.css" rel="stylesheet">
 	
+	<!-- intro.js CSS-->
+	<link href = "http://cdn.bootcss.com/intro.js/1.0.0/introjs.css" rel="stylesheet">
+	
 	<style>
     #candle_chart {
         font: 10px sans-serif;
@@ -140,11 +143,11 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
+                        <li class="sidebar-search" data-step="1" data-intro="Pick a portfolio and a symbol" data-position="right">
 							<select class="selectpicker" title="Select Portfolio" id="portfolio_picker"></select>
                             <div class="input-group custom-search-form">
 								<select class="selectpicker" title="Select Symbol" id="symbol_picker" data-width="100%"></select>
-                                <span class="input-group-btn">
+                                <span class="input-group-btn" data-step="2" data-intro="Click to load the chart" data-position="right">
                                     <button class="btn btn-default" type="button"  onclick="drawChart()">
                                         <i class="fa fa-search"></i>
                                     </button>
@@ -155,7 +158,7 @@
 
                         <li class="active">
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
+                            <ul class="nav nav-second-level" data-step="3" data-intro="Click and repeat above steps to view other charts" data-position="right">
                                 <li>
                                     <a class="active" href="main_content">Candlestick</a>
                                 </li>
@@ -171,11 +174,8 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li>
-                            <a href="#" onclick="genCSV()"><i class="fa fa-table fa-fw"></i> Generate CSV</a>
-                        </li>
-                        <li>
-                            <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
+                        <li data-step="4" data-intro="get your raw data here, make sure to select symbol before you generate" data-position="right">
+                            <a href="#" onclick="genCSV()"><i class="fa fa-table fa-fw" ></i> Generate CSV</a>
                         </li>
                     </ul>
                 </div>
@@ -186,9 +186,15 @@
 
         <!-- Page Content -->
         <div id="page-wrapper">
-			<h3>Candlestick Chart</h3>
+			<div class="row">
+                <div class="col-lg-12">
+                        <div class="panel-body">
+                            <h3 id="candle_h"></h3>
+                            <p id="candle_p"></p>
+						</div>
+				</div>
+			</div>
 			<div id="candle_chart"></div>
-			<p>Please brush to select date range.</p>
         </div>
         <!-- /#page-wrapper -->
 
@@ -212,6 +218,12 @@
 	
 	<!-- Custom Dropdown JavaScript -->
     <script src="../assets/js/bootstrap-select.min.js"></script>
+	
+	<!-- intro.js-->
+	<script src= "http://cdn.bootcss.com/intro.js/1.0.0/intro.js"></script>
+	
+	<!-- loader animation-->
+	<script src= "http://fgnass.github.io/spin.js/spin.min.js"></script>
 
 <script>
 		$( document ).ready(function() {
@@ -224,6 +236,7 @@
 				});
 				$('#portfolio_picker').selectpicker('refresh');
 			})
+			introJs().goToStep(1).start();
 		});
 		
 		$( document ).ready(function() {
@@ -248,11 +261,15 @@
 		function drawChart(){
 			var symbol = $("#symbol_picker option:selected").val() ;
 			$('#candle_chart').empty();
+			$("#candle_h").html("Candlestick Chart : "+ symbol);
+			$("#candle_p").html("Brush the chart below to select range. ");
 			   var margin = {top: 20, right: 20, bottom: 100, left: 50},
         margin2 = {top: 420, right: 20, bottom: 20, left: 50},
         width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom,
         height2 = 500 - margin2.top - margin2.bottom;
+		var target = document.getElementById('candle_chart');
+		var spinner = new Spinner().spin(target);
 
   	var parseDate = d3.time.format("%d-%b-%y").parse;
 
@@ -364,6 +381,7 @@
         var accessor = candlestick.accessor(),
             timestart = Date.now();
 
+			 spinner.stop();
         data = data.slice(0, 10000).map(function(d) {
             return {
                 date: parseDate(d.date),

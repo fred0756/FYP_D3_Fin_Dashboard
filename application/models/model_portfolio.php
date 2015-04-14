@@ -34,6 +34,9 @@ class Model_portfolio extends CI_Model{
 		return $this->db->get('portfolio')->result_array();
 	}
 	
+	public function get_user_profile($email){
+	
+	}
 }
 
 ?>

@@ -61,6 +61,7 @@ class Ajax extends CI_Controller {
 	}
 	
 	
+	
 	public function get_table()
 		{
 			$this->datatables->select('id,symbol,name,exchange,sector')
@@ -76,12 +77,23 @@ class Ajax extends CI_Controller {
 		$this->load->helper('download');
 		 $name = 'data.csv';
 		force_download($name, $data);
+	}
+	
+	public function get_user_profile(){
+		$this->load->model('model_users');
+		$data= $this->model_users->get_user_profile($this->session->userdata('email'));
+		echo json_encode($data);
 		
-		//header("Content-type: text/csv");
-	//	header("Content-Disposition: attachment; filename=file.csv");
-	//	header("Pragma: no-cache");
-	//	header("Expires: 0");
-	//	echo $data;
-		
+	}
+		public function edit_user_profile(){
+		$this->load->model('model_users');
+		$data= $this->model_users->update_user_profile();
+		redirect("main/main_content");
+	}
+	
+	public function edit_user_password(){
+		$this->load->model('model_users');
+		$data= $this->model_users->update_user_password($this->session->userdata('email'));
+		redirect("main/main_content");
 	}
 }

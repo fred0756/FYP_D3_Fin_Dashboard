@@ -26,6 +26,8 @@
 	<!-- Dropdown CSS -->
     <link href="../assets/css/bootstrap-select.min.css" rel="stylesheet">
 	
+	<!-- intro.js CSS-->
+	<link href = "http://cdn.bootcss.com/intro.js/1.0.0/introjs.css" rel="stylesheet">
 	<style>
     #candle_chart {
         font: 10px sans-serif;
@@ -114,11 +116,11 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
-							<select class="selectpicker" title="Select Portfolio" id="portfolio_picker"></select>
-                            <div class="input-group custom-search-form">
-								<select class="selectpicker" title="Select Symbol" id="symbol_picker" data-width="100%"></select>
-                                <span class="input-group-btn">
+                        <li class="sidebar-search" data-step="1" data-intro="Pick a portfolio and a symbol" data-position="right">
+							<select class="selectpicker" title="Select Portfolio"  data-width="100%" id="portfolio_picker" ></select>
+                            <div class="input-group custom-search-form" >
+								<select class="selectpicker" title="Select Symbol" id="symbol_picker" data-width="100%" ></select>
+                                <span class="input-group-btn"  data-step="2" data-intro="Click to view" data-position="right">
                                     <button class="btn btn-default" type="button"  onclick="drawChart()">
                                         <i class="fa fa-search"></i>
                                     </button>
@@ -129,7 +131,7 @@
 
                         <li class="active">
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
+                            <ul class="nav nav-second-level" data-step="3" data-intro="Click and repeat above step to view other charts" data-position="right">
                                 <li>
                                     <a class="active" href="main_content">Candlestick</a>
                                 </li>
@@ -161,6 +163,7 @@
         <!-- Page Content -->
         <div id="page-wrapper">
 			<div id="candle_chart"></div>
+
         </div>
         <!-- /#page-wrapper -->
 
@@ -184,6 +187,9 @@
 	
 	<!-- Custom Dropdown JavaScript -->
     <script src="../assets/js/bootstrap-select.min.js"></script>
+	
+	<!-- intro.js-->
+	<script src= "http://cdn.bootcss.com/intro.js/1.0.0/intro.js"></script>
 
 <script>
 		$( document ).ready(function() {
@@ -196,6 +202,7 @@
 				});
 				$('#portfolio_picker').selectpicker('refresh');
 			})
+			introJs().goToStep(1).start();
 		});
 		
 		$( document ).ready(function() {

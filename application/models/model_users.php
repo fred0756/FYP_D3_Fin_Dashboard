@@ -23,6 +23,9 @@ class Model_users extends CI_Model{
 		$data = array(
 			'email' =>$this->input->post('email'),
 			'password'=>md5($this->input->post('password')),
+			'name'=>$this->input->post('name'),
+			'phone'=>$this->input->post('phone'),
+			'address'=>$this->input->post('address'),
 			'key' => $key,
 			'profile'=>"user",
 			'validated'=>"0"
@@ -36,6 +39,41 @@ class Model_users extends CI_Model{
 			return false;
 		}
 	}
+	
+		public function admin_add_user(){
+	
+		$data = array(
+			'email' =>$this->input->post('email'),
+			'password'=>md5($this->input->post('password')),
+			'name'=>$this->input->post('name'),
+			'phone'=>$this->input->post('phone'),
+			'address'=>$this->input->post('address'),
+			'profile'=>"user",
+			'validated'=>"1"
+		);
+	
+	
+		$query=$this->db->insert('users',$data);
+		if($query){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	public function admin_delete_user(){
+	
+		$data = array(
+			'email' =>$this->input->post('email'),
+		);
+		$query=$this->db->delete('users',array('email' =>$this->input->post('email')));
+		if($query){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	
 	
 	
 	public function is_key_valid($key){
@@ -91,6 +129,38 @@ class Model_users extends CI_Model{
 	}
 	else return false;
 	}
+	
+	public function get_user_profile($email){
+		$this->db->where('email',$email);
+		$query = $this->db->get('users');
+		return $query->result_array();
+	}
+	
+	public function update_user_profile(){
+		$this->db->where('email',$this->input->post('email'));
+		$data = array(
+               'email' => $this->input->post('email'),
+			   'name'=>$this->input->post('username'),
+			   'address'=>$this->input->post('address'),
+			   'phone'=>$this->input->post('phone')
+            );
+		if($this->db->update('users',$data)){
+			return true;
+		}
+		else return false;
+	}
+	
+	public function update_user_password($email){
+		$this->db->where('email',$email);
+		$data = array(
+               'password' => md5($this->input->post('password')),
+            );
+		if($this->db->update('users',$data)){
+			return true;
+		}
+		else return false;
+	}
+	
 }
 
 ?>

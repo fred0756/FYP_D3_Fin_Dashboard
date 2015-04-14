@@ -147,10 +147,7 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
+                            <a href="#" onclick="genCSV()"><i class="fa fa-table fa-fw"></i> Generate CSV</a>
                         </li>
                     </ul>
                 </div>
@@ -161,6 +158,14 @@
 
         <!-- Page Content -->
         <div id="page-wrapper">
+					<div class="row">
+                <div class="col-lg-12">
+                        <div class="panel-body">
+                            <h3 id="macd_h"></h3>
+                            <p id="macd_p"></p>
+						</div>
+				</div>
+			</div>
 			<div id="macd_chart"></div>
         </div>
         <!-- /#page-wrapper -->
@@ -185,6 +190,9 @@
 	
 	<!-- Custom Dropdown JavaScript -->
     <script src="../assets/js/bootstrap-select.min.js"></script>
+	
+	<!-- loader animation-->
+	<script src= "http://fgnass.github.io/spin.js/spin.min.js"></script>
 
 <script>
 		$( document ).ready(function() {
@@ -220,10 +228,14 @@
 		function drawChart(){
 			var symbol = $("#symbol_picker option:selected").val() ;
 				$('#macd_chart').empty();
+			$("#macd_h").html("MACD Chart : "+ symbol);
+			$("#macd_p").html("Moving average convergence/divergence , indicates price trend of the stock.");
 
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
+			var target = document.getElementById('macd_chart');
+		var spinner = new Spinner().spin(target);
 
     var parseDate = d3.time.format("%d-%b-%y").parse;
 
@@ -253,9 +265,9 @@
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
    var result = d3.json('<?php echo base_url(); ?>ajax/getStockPrice/'+symbol, function(error, data) {
+		spinner.stop();
         var accessor = macd.accessor();
-
-        data = data.slice(0, 500).map(function(d) {
+        data = data.slice(0, 3650).map(function(d) {
             // Open, high, low, close generally not required, is being used here to demonstrate colored volume
             // bars
             return {
@@ -293,6 +305,13 @@
                 .text("MACD");
     });
 }
+
+
+	function genCSV(){
+		var symbol = $("#symbol_picker option:selected").val() ;
+		console.log(symbol);
+		document.location.href = '<?php echo base_url(); ?>ajax/generateCSV/'+symbol;
+	}	
 </script>
 
 </body>

@@ -7,4 +7,17 @@ class Admin extends CI_Controller {
 		$this->model_users->update_profile($email,$profile);
 	}
 	
+	
+	public function admin_add_user(){
+		$this->load->model('model_users');
+		$this->model_users->admin_add_user();
+		redirect('main/main_content');
+	}
+	
+		public function admin_delete_user(){
+		$this->load->model('model_users');
+		$this->model_users->admin_delete_user();
+		redirect('main/main_content');
+	}
+	
 }

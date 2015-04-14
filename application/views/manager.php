@@ -71,9 +71,9 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a href="#" onclick="showuserProfileModal()"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        <li><a href="#" onclick="showChangePassModal()"><i class="fa fa-gear fa-fw"></i> Change Password</a>
                         </li>
                         <li class="divider"></li>
                         <li><a href='<?php echo base_url()."main/logout"?>'><i class="fa fa-sign-out fa-fw"></i> Logout</a>
@@ -104,12 +104,7 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
-                        </li>
+
 
                     </ul>
                 </div>
@@ -120,6 +115,14 @@
 
         <!-- Page Content -->
         <div id="page-wrapper">
+			<div class="row">
+                <div class="col-lg-12">
+                        <div class="panel-body">
+                            <h3>Listed Companies</h3>
+                            <p>Below are the listed companies in AMEX, NASDAQ and NYSE. Please add them to your portfolio by adding the symbol.</p>
+						</div>
+				</div>
+			</div>
 			<table class="table table-striped table-bordered" cellspacing="0" id="stock_list">
 				<thead>
 					<tr>
@@ -180,6 +183,105 @@
 	</div>
 	
 	
+	<div class="modal fade" id="userProfileModal" role="dialog" data-backdrop="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">User profile Setting</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="edit_profile_form" action="<?php echo base_url()."ajax/edit_user_profile"?>"  method="POST">
+                        <fieldset>
+                        <div class="control-group">
+                        <!-- E-mail -->
+                            <label class="control-label" for="email">E-mail</label>
+                            <div class="controls">
+                                <input type="text" id="email" name="email" placeholder="" class="input-xlarge" type="email"  readonly="readonly">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+						<div class="control-group">
+                        <!-- Name -->
+                            <label class="control-label" for="text">Profile</label>
+                            <div class="controls">
+                                <input type="text" id="profile" name="profile" placeholder="" class="input-xlarge" type="text"  readonly="readonly">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+						<div class="control-group">
+                        <!-- Name -->
+                            <label class="control-label" for="text">Name</label>
+                            <div class="controls">
+                                <input type="text" id="username" name="username" placeholder="" class="input-xlarge" type="text">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+						<div class="control-group">
+                        <!-- Phone -->
+                            <label class="control-label" for="text">Phone</label>
+                            <div class="controls">
+                                <input type="text" id="phone" name="phone" placeholder="" class="input-xlarge" type="text">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+						<div class="control-group">
+                        <!-- Address -->
+                            <label class="control-label" for="text">Address</label>
+                            <div class="controls">
+                                <input type="text" id="address" name="address" placeholder="" class="input-xlarge" type="text">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" form="edit_profile_form" name="submit" class="btn btn-success">Sumbit Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="passwordModal" role="dialog" data-backdrop="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Change Password</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="pass_form" action="<?php echo base_url()."ajax/edit_user_password"?>"  method="POST">
+                        <fieldset>
+                        <div class="control-group">
+                        <!-- Password-->
+                            <label class="control-label" for="password">Password</label>
+                            <div class="controls">
+                                <input type="password" id="password" name="password" placeholder="" class="input-xlarge">
+                                <p class="help-block" id ="password_msg"></p>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                        <!-- Password -->
+                            <label class="control-label"  for="password_confirm">Password (Confirm)</label>
+                            <div class="controls">
+                                <input type="password" id="password_confirm" name="password_confirm" placeholder="" class="input-xlarge">
+                                <p class="help-block" id="password_confirm_msg"></p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" form="pass_form" name="submit" class="btn btn-success">Change Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+	
+	
 
     <!-- jQuery -->
     <script src="../assets/js/jquery.min.js"></script>
@@ -217,7 +319,54 @@ $(document).ready(function() {
 		],
 
     });
+	
+	var password= $("#password");
+	var password_confirm= $("#password_confirm");
+		password.change(function(){
+		if(password.val().length<4){
+		$("#password_msg").html("Password should be at least 4 characters");
+		}
+		else $("#password_msg").html("");
+	})
+	password_confirm.change(function(){
+		if(password.val()!=password_confirm.val()){
+			$("#password_confirm_msg").html("Your password is not consistent");
+		}
+		else $("#password_confirm_msg").html("");
+	})
+	
+	
 });
+
+
+	function showuserProfileModal(){
+		$.post(
+			'<?php echo base_url(); ?>ajax/get_user_profile/',
+				function(data){
+				
+					data= $.parseJSON(data);
+					email= data[0].email;
+					profile= data[0].profile;
+					name=data[0].name;
+					phone=data[0].phone;
+					address=data[0].address;
+					console.log(data[0].name);
+					$('#email').val(email);
+					$('#profile').val(profile);
+					$('#address').val(address);
+					$('#phone').val(phone);
+					$('#username').val(name);
+				//	console.log(data);
+				//	console.log(data[0].id);
+					$('#userProfileModal').modal('show');
+				}
+		);
+		
+	}
+	
+	function showChangePassModal(){
+		$('#passwordModal').modal('show');
+	}
 </script>
 
 </body>

@@ -135,10 +135,7 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
+                            <a href="#" onclick="genCSV()"><i class="fa fa-table fa-fw"></i> Generate CSV</a>
                         </li>
                     </ul>
                 </div>
@@ -149,6 +146,15 @@
 
         <!-- Page Content -->
         <div id="page-wrapper">
+					<div class="row">
+                <div class="col-lg-12">
+                        <div class="panel-body">
+                            <h3 id="volume_h"></h3>
+                            <p id="volume_p"></p>
+						</div>
+				</div>
+			</div>
+		
 			<div id="volume_chart"></div>
         </div>
         <!-- /#page-wrapper -->
@@ -174,6 +180,9 @@
 	<script src="../assets/js/techan.js"></script>
 	<!-- Custom Dropdown JavaScript -->
     <script src="../assets/js/bootstrap-select.min.js"></script>
+	
+	<!-- loader animation-->
+	<script src= "http://fgnass.github.io/spin.js/spin.min.js"></script>
 
 <script>
 		$( document ).ready(function() {
@@ -208,10 +217,13 @@
 		function drawChart(){
 			var  symbol= $("#symbol_picker option:selected").val() ;
 			$('#volume_chart').empty();
-
+			$("#volume_h").html("Volume Chart : "+ symbol);
+			$("#volume_p").html("This shows the transcation volume of specified stock.");
 			 var margin = {top: 20, right: 20, bottom: 30, left: 50},
 						width = 960 - margin.left - margin.right,
 						height = 500 - margin.top - margin.bottom;
+			var target = document.getElementById('volume_chart');
+			var spinner = new Spinner().spin(target);
 
 			var parseDate = d3.time.format("%d-%b-%y").parse;
 
@@ -244,6 +256,7 @@
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			var result = d3.json('<?php echo base_url(); ?>ajax/getStockPrice/'+symbol, function(error, source_data) {
+			spinner.stop();
 				var accessor = volume.accessor();
 
 				data = source_data.slice(0, 500).map(function(d) {
@@ -333,6 +346,12 @@
 				
 			});
 		}
+		
+		function genCSV(){
+		var symbol = $("#symbol_picker option:selected").val() ;
+		console.log(symbol);
+		document.location.href = '<?php echo base_url(); ?>ajax/generateCSV/'+symbol;
+	}	
 		
 </script>
 

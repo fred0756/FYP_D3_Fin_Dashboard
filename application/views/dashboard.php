@@ -50,17 +50,24 @@
 	
 	
 
+
+
 <div class="row">
-    <div id="yearly-bubble-chart" class="dc-chart">
-        <strong>Yearly Performance</strong> (radius: fluctuation/index ratio, color: gain/loss)
-        <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();"
-           style="display: none;">reset</a>
+
+	
+	<div id="fluctuation-chart">
+        <strong>Days by Fluctuation(%)</strong>
+        <span class="reset" style="display: none;">range: <span class="filter"></span></span>
+        <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
         <div class="clearfix"></div>
     </div>
+
 </div>
 
+
 <div class="row">
+
     <div id="gain-loss-chart">
         <strong>Days by Gain/Loss</strong>
         <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -68,9 +75,39 @@
         <div class="clearfix"></div>
     </div>
 
+    <div id="symbol-chart">
+        <strong>Symbol</strong>
+        <span class="reset" style="display: none;">range: <span class="filter"></span></span>
+        <a class="reset" href="javascript:moveChart.filterAll();symbolChart.filterAll();dc.redrawAll();"
+           style="display: none;">reset</a>
+        <div class="clearfix"></div>
+    </div>
+	
+	
+
+</div>
+
+<div class="row">
+
+    <div id="year-chart">
+        <strong>Year</strong>
+        <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+        <div class="clearfix"></div>
+    </div>
+
+
     <div id="quarter-chart">
         <strong>Quarters</strong>
         <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+        <div class="clearfix"></div>
+    </div>
+	
+	
+    <div id="month-of-year-chart">
+        <strong>Month of Year</strong>
+        <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
         <div class="clearfix"></div>
     </div>
@@ -82,26 +119,7 @@
         <div class="clearfix"></div>
     </div>
 
-    <div id="fluctuation-chart">
-        <strong>Days by Fluctuation(%)</strong>
-        <span class="reset" style="display: none;">range: <span class="filter"></span></span>
-        <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
-        <div class="clearfix"></div>
-    </div>
-</div>
-
-
-<div class="row">
-    <div id="symbol-chart">
-        <strong>Symbol</strong>
-        <span class="reset" style="display: none;">range: <span class="filter"></span></span>
-        <a class="reset" href="javascript:moveChart.filterAll();symbolChart.filterAll();dc.redrawAll();"
-           style="display: none;">reset</a>
-
-        <div class="clearfix"></div>
-    </div>
-	
 </div>
 
 
@@ -121,7 +139,7 @@
 
 
 <div class="row">
-    <div id="monthly-move-chart">
+    <div id="monthly-move-chart" hidden>
         <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong>
         <span class="reset" style="display: none;">range: <span class="filter"></span></span>
         <a class="reset" href="javascript:moveChart.filterAll();volumeChart.filterAll();dc.redrawAll();"
@@ -159,20 +177,13 @@
 <script type="text/javascript" src="../../assets/js/colorbrewer.js"></script>
 
 <script>
-//# dc.js Getting Started and How-To Guide
-'use strict';
-
-/* jshint globalstrict: true */
-/* global dc,d3,crossfilter,colorbrewer */
-
-// ### Create Chart Objects
-// Create chart objects assocated with the container elements identified by the css selector.
-// Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or
-// filtered by other page controls.
+//assign id to charts
 var gainOrLossChart = dc.pieChart('#gain-loss-chart');
 var fluctuationChart = dc.barChart('#fluctuation-chart');
 var quarterChart = dc.pieChart('#quarter-chart');
 var dayOfWeekChart = dc.rowChart('#day-of-week-chart');
+var monthOfYearChart = dc.rowChart('#month-of-year-chart');
+var yearChart = dc.rowChart('#year-chart');
 var moveChart = dc.lineChart('#monthly-move-chart');
 var volumeChart = dc.barChart('#monthly-volume-chart');
 
@@ -184,59 +195,35 @@ var maxValueDateBox=dc.numberDisplay();
 var minValueBox=dc.numberDisplay('#min-value');
 var minValueDateBox=dc.numberDisplay();
 
-// ### Anchor Div for Charts
-/*
-// A div anchor that can be identified by id
-    <div id='your-chart'></div>
-// Title or anything you want to add above the chart
-    <div id='chart'><span>Days by Gain or Loss</span></div>
-// ##### .turnOnControls()
-// If a link with css class 'reset' is present then the chart
-// will automatically turn it on/off based on whether there is filter
-// set on this chart (slice selection for pie chart and brush
-// selection for bar chart). Enable this with `chart.turnOnControls(true)`
-     <div id='chart'>
-       <a class='reset' href='javascript:myChart.filterAll();dc.redrawAll();' style='display: none;'>reset</a>
-     </div>
-// dc.js will also automatically inject applied current filter value into
-// any html element with css class set to 'filter'
-    <div id='chart'>
-        <span class='reset' style='display: none;'>Current filter: <span class='filter'></span></span>
-    </div>
-*/
-
-//### Load your data
-//Data can be loaded through regular means with your
-//favorite javascript library
-//
-//```javascript
-//d3.csv('data.csv', function(data) {...};
-//d3.json('data.json', function(data) {...};
-//jQuery.getJson('data.json', function(data){...});
-//```
-//d3.json('<?php echo base_url(); ?>ajax/getStockPrice/BABA', function (data) {
+//load data from db
 d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?>', function (data) {
     /* since its a csv file we need to format the data a bit */
     var dateFormat = d3.time.format("%d-%b-%y").parse;
+	 var monthFormat = d3.time.format("%B").parse;
     var numberFormat = d3.format('.2f');
 
     data.forEach(function (d) {
         d.dd = dateFormat(d.date);
        // console.log(d.dd);
         d.month = d3.time.month(d.dd); // pre-calculate month for better performance
-       //d.month= d.dd.getMonth();
+       d.mmonth= d.dd.getMonth()+1;
+	    d.year= d.dd.getFullYear();
         d.close = +d.close; // coerce to number
       //  console.log(d.close);
         d.open = +d.open;
 		d.adjusted_close= + d.adjusted_close;
     });
 
-    //### Create Crossfilter Dimensions and Groups
-    //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
+//add data to crossfilter
     var ndx = crossfilter(data);
     var all = ndx.groupAll();
 
-
+	
+	var min_date= d3.min(data, function(d) { return d.dd; });
+	var min_value= d3.min(data, function(d) { return d.adjusted_close*d.quantity; });
+	console.log(min_value);
+	var max_date= d3.max(data, function(d) { return d.dd; });
+	console.log(max_date);
 
     // dimension by full date
     var dateDimension = ndx.dimension(function (d) {
@@ -275,6 +262,20 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
     var moveMonths = ndx.dimension(function (d) {
         return d.month;
     });
+	
+	var Month = ndx.dimension(function (d) {
+      //  return d.dd.getMonth();
+		      return d.mmonth;
+    });
+	var monthGroup= Month.group();
+	
+	    // dimension by year
+	var Year = ndx.dimension(function (d) {
+        return d.year;
+		      
+    });
+	var YearGroup= Year.group();
+	
     // group by total movement within month
     var monthlyMoveGroup = moveMonths.group().reduceSum(function (d) {
         return Math.abs(d.close - d.open);
@@ -358,8 +359,8 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
     // on other charts within the same chart group.
 
     gainOrLossChart
-        .width(180) // (optional) define chart width, :default = 200
-        .height(180) // (optional) define chart height, :default = 200
+   //     .width(180) // (optional) define chart width, :default = 200
+    //    .height(180) // (optional) define chart height, :default = 200
         .radius(80) // define pie radius
         .dimension(gainOrLoss) // set dimension
         .group(gainOrLossGroup) // set group
@@ -389,16 +390,16 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
         .colorAccessor(function(d, i){return d.value;})
         */;
 
-    quarterChart.width(180)
-        .height(180)
+    quarterChart.width(200)
+        .height(200)
         .radius(80)
         .innerRadius(30)
         .dimension(quarter)
         .group(quarterGroup);
 
     //#### Row Chart
-    dayOfWeekChart.width(180)
-        .height(180)
+    dayOfWeekChart.width(200)
+        .height(200)
         .margins({top: 20, left: 10, right: 10, bottom: 20})
         .group(dayOfWeekGroup)
         .dimension(dayOfWeek)
@@ -414,6 +415,44 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
         .elasticX(true)
         .xAxis().ticks(4);
 		
+		    //#### Row Chart
+    monthOfYearChart.width(200)
+        .height(200)
+        .margins({top: 20, left: 10, right: 10, bottom: 20})
+        .group(monthGroup)
+        .dimension(Month)
+        // assign colors to each value in the x scale domain
+        .ordinalColors(['#3182bd'])
+        .label(function (d) {
+             return d.key;
+        })
+        // title sets the row text
+        .title(function (d) {
+            return d.value;
+        })
+        .elasticX(true)
+        .xAxis().ticks(4);
+		
+				    //#### Row Chart
+    yearChart.width(200)
+        .height(200)
+        .margins({top: 20, left: 10, right: 10, bottom: 20})
+        .group(YearGroup)
+        .dimension(Year)
+        // assign colors to each value in the x scale domain
+        .ordinalColors(['#3182bd'])
+        .label(function (d) {
+             return d.key;
+        })
+        // title sets the row text
+        .title(function (d) {
+            return d.value;
+        })
+        .elasticX(true)
+        .xAxis().ticks(4);
+
+
+
 		
 
     //#### Bar Chart
@@ -422,8 +461,8 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
     /* dc.barChart('#volume-month-chart') */
-    fluctuationChart.width(420)
-        .height(180)
+    fluctuationChart.width(800)
+        .height(200)
         .margins({top: 10, right: 50, bottom: 30, left: 40})
         .dimension(fluctuation)
         .group(fluctuationGroup)
@@ -453,8 +492,9 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
 	
 	
 	//symbol chart
-	    symbolChart.width(180)
-        .height(180)
+	    symbolChart
+		.width(500)
+        .height(200)
         .margins({top: 20, left: 10, right: 10, bottom: 20})
         .group(symbolGroup)
         .dimension(symbol)
@@ -482,7 +522,7 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
         .mouseZoomable(true)
         // Specify a range chart to link the brush extent of the range with the zoom focue of the current chart.
         .rangeChart(volumeChart)
-        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2015, 1, 1)]))
+        .x(d3.time.scale().domain([min_date, max_date]))
         .round(d3.time.month.round)
         .xUnits(d3.time.months)
         .elasticY(true)
@@ -546,7 +586,7 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
         .mouseZoomable(true)
         // Specify a range chart to link the brush extent of the range with the zoom focue of the current chart.
         .rangeChart(volumeChart)
-        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2015, 1, 1)]))
+        .x(d3.time.scale().domain([min_date, max_date]))
         .round(d3.time.month.round)
         .xUnits(d3.time.months)
         .elasticY(true)
@@ -581,63 +621,30 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
         .group(volumeByMonthGroup)
         .centerBar(true)
         .gap(1)
-        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2015, 1, 1)]))
+        .x(d3.time.scale().domain([min_date, max_date]))
         .round(d3.time.month.round)
         .alwaysUseRounding(true)
         .xUnits(d3.time.months);
 
-    /*
-    //#### Data Count
-    // Create a data count widget and use the given css selector as anchor. You can also specify
-    // an optional chart group for this chart to be scoped within. When a chart belongs
-    // to a specific group then any interaction with such chart will only trigger redraw
-    // on other charts within the same chart group.
-    <div id='data-count'>
-        <span class='filter-count'></span> selected out of <span class='total-count'></span> records
-    </div>
-    */
+//count the total number of data
     dc.dataCount('.dc-data-count')
         .dimension(ndx)
         .group(all)
-        // (optional) html, for setting different html for some records and all records.
-        // .html replaces everything in the anchor with the html given using the following function.
-        // %filter-count and %total-count are replaced with the values obtained.
         .html({
             some:'<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
                 ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'\'>Reset All</a>',
             all:'All records selected. Please click on the graph to apply filters.'
         });
 
-    /*
-    //#### Data Table
-    // Create a data table widget and use the given css selector as anchor. You can also specify
-    // an optional chart group for this chart to be scoped within. When a chart belongs
-    // to a specific group then any interaction with such chart will only trigger redraw
-    // on other charts within the same chart group.
-    <!-- anchor div for data table -->
-    <div id='data-table'>
-        <!-- create a custom header -->
-        <div class='header'>
-            <span>Date</span>
-            <span>Open</span>
-            <span>Close</span>
-            <span>Change</span>
-            <span>Volume</span>
-        </div>
-        <!-- data rows will filled in here -->
-    </div>
-    */
+// raw data
     dc.dataTable('.dc-data-table')
         .dimension(dateDimension)
-        // data table does not use crossfilter group but rather a closure
-        // as a grouping function
         .group(function (d) {
             var format = d3.format('02d');
             return d.dd.getFullYear() + '/' + format((d.dd.getMonth() + 1));
         })
         .size(100) // (optional) max number of records to be shown, :default = 25
-        // There are several ways to specify the columns; see the data-table documentation.
-        // This code demonstrates generating the column header automatically based on the columns.
+
         .columns([
             'date',    // d['date'], ie, a field accessor; capitalized automatically
             'open',    // ...
@@ -663,93 +670,9 @@ d3.json('<?php echo base_url(); ?>ajax/get_portfolio_stock_price/<?php echo $id?
             table.selectAll('.dc-table-group').classed('info', true);
         });
 
-    /*
-    //#### Geo Choropleth Chart
-    //Create a choropleth chart and use the given css selector as anchor. You can also specify
-    //an optional chart group for this chart to be scoped within. When a chart belongs
-    //to a specific group then any interaction with such chart will only trigger redraw
-    //on other charts within the same chart group.
-    dc.geoChoroplethChart('#us-chart')
-        .width(990) // (optional) define chart width, :default = 200
-        .height(500) // (optional) define chart height, :default = 200
-        .transitionDuration(1000) // (optional) define chart transition duration, :default = 1000
-        .dimension(states) // set crossfilter dimension, dimension key should match the name retrieved in geo json layer
-        .group(stateRaisedSum) // set crossfilter group
-        // (optional) define color function or array for bubbles
-        .colors(['#ccc', '#E2F2FF','#C4E4FF','#9ED2FF','#81C5FF','#6BBAFF','#51AEFF','#36A2FF','#1E96FF','#0089FF',
-            '#0061B5'])
-        // (optional) define color domain to match your data domain if you want to bind data or color
-        .colorDomain([-5, 200])
-        // (optional) define color value accessor
-        .colorAccessor(function(d, i){return d.value;})
-        // Project the given geojson. You can call this function mutliple times with different geojson feed to generate
-        // multiple layers of geo paths.
-        //
-        // * 1st param - geo json data
-        // * 2nd param - name of the layer which will be used to generate css class
-        // * 3rd param - (optional) a function used to generate key for geo path, it should match the dimension key
-        // in order for the coloring to work properly
-        .overlayGeoJson(statesJson.features, 'state', function(d) {
-            return d.properties.name;
-        })
-        // (optional) closure to generate title for path, :default = d.key + ': ' + d.value
-        .title(function(d) {
-            return 'State: ' + d.key + '\nTotal Amount Raised: ' + numberFormat(d.value ? d.value : 0) + 'M';
-        });
-
-        //#### Bubble Overlay Chart
-        // Create a overlay bubble chart and use the given css selector as anchor. You can also specify
-        // an optional chart group for this chart to be scoped within. When a chart belongs
-        // to a specific group then any interaction with such chart will only trigger redraw
-        // on other charts within the same chart group.
-        dc.bubbleOverlay('#bubble-overlay')
-            // bubble overlay chart does not generate it's own svg element but rather resue an existing
-            // svg to generate it's overlay layer
-            .svg(d3.select('#bubble-overlay svg'))
-            .width(990) // (optional) define chart width, :default = 200
-            .height(500) // (optional) define chart height, :default = 200
-            .transitionDuration(1000) // (optional) define chart transition duration, :default = 1000
-            .dimension(states) // set crossfilter dimension, dimension key should match the name retrieved in geo json
-                layer
-            .group(stateRaisedSum) // set crossfilter group
-            // closure used to retrieve x value from multi-value group
-            .keyAccessor(function(p) {return p.value.absGain;})
-            // closure used to retrieve y value from multi-value group
-            .valueAccessor(function(p) {return p.value.percentageGain;})
-            // (optional) define color function or array for bubbles
-            .colors(['#ccc', '#E2F2FF','#C4E4FF','#9ED2FF','#81C5FF','#6BBAFF','#51AEFF','#36A2FF','#1E96FF','#0089FF',
-                '#0061B5'])
-            // (optional) define color domain to match your data domain if you want to bind data or color
-            .colorDomain([-5, 200])
-            // (optional) define color value accessor
-            .colorAccessor(function(d, i){return d.value;})
-            // closure used to retrieve radius value from multi-value group
-            .radiusValueAccessor(function(p) {return p.value.fluctuationPercentage;})
-            // set radius scale
-            .r(d3.scale.linear().domain([0, 3]))
-            // (optional) whether chart should render labels, :default = true
-            .renderLabel(true)
-            // (optional) closure to generate label per bubble, :default = group.key
-            .label(function(p) {return p.key.getFullYear();})
-            // (optional) whether chart should render titles, :default = false
-            .renderTitle(true)
-            // (optional) closure to generate title per bubble, :default = d.key + ': ' + d.value
-            .title(function(d) {
-                return 'Title: ' + d.key;
-            })
-            // add data point to it's layer dimension key that matches point name will be used to
-            // generate bubble. multiple data points can be added to bubble overlay to generate
-            // multiple bubbles
-            .point('California', 100, 120)
-            .point('Colorado', 300, 120)
-            // (optional) setting debug flag to true will generate a transparent layer on top of
-            // bubble overlay which can be used to obtain relative x,y coordinate for specific
-            // data point, :default = false
-            .debug(true);
-    */
 
     //#### Rendering
-    //simply call renderAll() to render all charts on the page
+
     dc.renderAll();
     /*
     // or you can render charts belong to a specific chart group

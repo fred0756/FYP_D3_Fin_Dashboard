@@ -169,6 +169,30 @@
                                 <p class="help-block" id="password_confirm_msg"></p>
                             </div>
                         </div>
+						<div class="control-group">
+                        <!-- Name -->
+                            <label class="control-label" for="text">Name(Optional)</label>
+                            <div class="controls">
+                                <input type="text" id="name" name="name" placeholder="" class="input-xlarge" type="text">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+						<div class="control-group">
+                        <!-- Phone -->
+                            <label class="control-label" for="text">Phone(Optional)</label>
+                            <div class="controls">
+                                <input type="text" id="phone" name="phone" placeholder="" class="input-xlarge" type="text">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+						<div class="control-group">
+                        <!-- Address -->
+                            <label class="control-label" for="text">Address(Optional)</label>
+                            <div class="controls">
+                                <input type="text" id="address" name="address" placeholder="" class="input-xlarge" type="text">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
                     </fieldset>
                 </form>
             </div>
@@ -196,9 +220,9 @@
 							<p class="lead" style="font-size:40px"><strong>$9.99 / month</strong></p>
 						</div>
 						<ul class="list-group list-group-flush text-center">
-							<li class="list-group-item"><i class="icon-remove text-danger"></i> Personal use</li>
-							<li class="list-group-item"><i class="icon-ok text-danger"></i> Unlimited projects</li>
-							<li class="list-group-item"><i class="icon-ok text-danger"></i> 27/7 support</li>
+							<li class="list-group-item"><i class="icon-ok text-danger"></i> Personal use</li>
+							<li class="list-group-item"><i class="icon-ok text-danger"></i>1 Portfolio</li>
+							<li class="list-group-item"><i class="icon-ok text-danger"></i> 10 Selected Stocks</li>
 						</ul>
 						<div class="panel-footer">
 						<center>
@@ -225,9 +249,9 @@
 							<p class="lead" style="font-size:40px"><strong>$19.99 / month</strong></p>
 						</div>
 						<ul class="list-group list-group-flush text-center">
-							<li class="list-group-item"><i class="icon-ok text-info"></i> Personal use</li>
-							<li class="list-group-item"><i class="icon-ok text-info"></i> Unlimited projects</li>
-							<li class="list-group-item"><i class="icon-ok text-info"></i> 27/7 support</li>
+							<li class="list-group-item"><i class="icon-ok text-info"></i> Business use</li>
+							<li class="list-group-item"><i class="icon-ok text-info"></i> Up to 5 Portfolios</li>
+							<li class="list-group-item"><i class="icon-ok text-info"></i> Unlimited Stocks</li>
 						</ul>
 						<div class="panel-footer">
 						<center>
@@ -255,9 +279,9 @@
 							<p class="lead" style="font-size:40px"><strong>$29.99 / month</strong></p>
 						</div>
 						<ul class="list-group list-group-flush text-center">
-							<li class="list-group-item"><i class="icon-ok text-info"></i> Personal use</li>
-							<li class="list-group-item"><i class="icon-ok text-info"></i> Unlimited projects</li>
-							<li class="list-group-item"><i class="icon-ok text-info"></i> 27/7 support</li>
+							<li class="list-group-item"><i class="icon-ok text-info"></i> Business use</li>
+							<li class="list-group-item"><i class="icon-ok text-info"></i> Unlimited Portfolio</li>
+							<li class="list-group-item"><i class="icon-ok text-info"></i> Unlimited Stocks</li>
 						</ul>
 						<div class="panel-footer">
 							<center>
@@ -290,9 +314,25 @@
 <div class="modal fade bs-example-modal-lg" id="aboutModal" role="dialog" data-backdrop="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
+			    <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">About</h4>
+                </div>
                 <div class="modal-body">
-					
-					
+				<h3>Admin Function</h3>
+				<img src="<?php echo base_url();?>/assets/images/about/admin.jpg" alt="HTML5 Icon" style="width:800px">
+				<h3>Listed companies</h3>
+				<img src="<?php echo base_url();?>/assets/images/about/manager1.jpg" alt="HTML5 Icon" style="width:800px">
+				<h3>Portfolio Management</h3>
+				<img src="<?php echo base_url();?>/assets/images/about/manager2.jpg" alt="HTML5 Icon" style="width:800px">
+				<img src="<?php echo base_url();?>/assets/images/about/dashboard.jpg" alt="HTML5 Icon" style="width:800px">
+				<h3>Technical Analysis Charts </h3>
+				<img src="<?php echo base_url();?>/assets/images/about/candlestick.jpg" alt="HTML5 Icon" style="width:800px">
+				<h3></h3>
+				<img src="<?php echo base_url();?>/assets/images/about/volume.jpg" alt="HTML5 Icon" style="width:800px">
+				<h3></h3>
+				<img src="<?php echo base_url();?>/assets/images/about/macd.jpg" alt="HTML5 Icon" style="width:800px">
+				<h3></h3>
+					<img src="<?php echo base_url();?>/assets/images/about/rsi.jpg" alt="HTML5 Icon" style="width:800px">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -179,6 +179,9 @@
 	<script src="../assets/js/techan.js"></script>
 	<!-- Custom Dropdown JavaScript -->
     <script src="../assets/js/bootstrap-select.min.js"></script>
+	
+	<!-- loader animation-->
+	<script src= "http://fgnass.github.io/spin.js/spin.min.js"></script>
 
 <script>
 		$( document ).ready(function() {
@@ -219,6 +222,9 @@
 						width = 960 - margin.left - margin.right,
 						height = 500 - margin.top - margin.bottom,
 						 height2 = 600 - margin2.top - margin2.bottom;
+						 
+			var target = document.getElementById('volume_chart');
+			var spinner = new Spinner().spin(target);
 
 			var parseDate = d3.time.format("%d-%b-%y").parse;
 
@@ -313,6 +319,7 @@
 		var zoomable, zoomable2;
 
 			var result = d3.json('<?php echo base_url(); ?>ajax/getStockPrice/'+symbol, function(error, source_data) {
+			spinner.stop();
 				  var accessor = volume.accessor();
 
 				data = source_data.slice(0, 500).map(function(d) {

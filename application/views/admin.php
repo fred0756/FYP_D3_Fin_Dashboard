@@ -60,11 +60,7 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
+
                         <li><a href='<?php echo base_url()."main/logout"?>'><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
@@ -81,12 +77,11 @@
                         <li>
                             <a class="active" href="index.php"><i class="fa fa-wrench fa-fw"></i> List All User</a>
                         </li>
-						
 						<li>
-                            <a href="index.php"><i class="fa fa-search"></i>Search User</a>
+                            <a href="#addUserModal" data-toggle="modal"><i class="fa fa-plus"></i>Add User</a>
                         </li>
 						<li>
-                            <a href="index.php"><i class="fa fa-plus"></i>Add User</a>
+                            <a href="#deleteUserModal" data-toggle="modal"><i class="fa fa-minus"></i>Delete User</a>
                         </li>
                     </ul>
                 </div>
@@ -139,6 +134,96 @@
         </div>
         <!-- /#page-wrapper -->
 
+		
+		<div class="modal fade" id="addUserModal" role="dialog" data-backdrop="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Add User</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="add_user_form" action="<?php echo base_url()."admin/admin_add_user"?>"  method="POST">
+                        <fieldset>
+                        <div class="control-group">
+                        <!-- E-mail -->
+                            <label class="control-label" for="email">E-mail</label>
+                            <div class="controls">
+                                <input type="text" id="email" name="email" placeholder="" class="input-xlarge" type="email">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                        <!-- Password-->
+                            <label class="control-label" for="password">Password</label>
+                            <div class="controls">
+                                <input type="password" id="password" name="password" placeholder="" class="input-xlarge">
+                                <p class="help-block" id ="password_msg"></p>
+                            </div>
+                        </div>
+						<div class="control-group">
+                        <!-- Name -->
+                            <label class="control-label" for="text">Name(Optional)</label>
+                            <div class="controls">
+                                <input type="text" id="name" name="name" placeholder="" class="input-xlarge" type="text">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+						<div class="control-group">
+                        <!-- Phone -->
+                            <label class="control-label" for="text">Phone(Optional)</label>
+                            <div class="controls">
+                                <input type="text" id="phone" name="phone" placeholder="" class="input-xlarge" type="text">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+						<div class="control-group">
+                        <!-- Address -->
+                            <label class="control-label" for="text">Address(Optional)</label>
+                            <div class="controls">
+                                <input type="text" id="address" name="address" placeholder="" class="input-xlarge" type="text">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" form="add_user_form" name="submit" class="btn btn-success">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+		<div class="modal fade" id="deleteUserModal" role="dialog" data-backdrop="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Delete User</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="register_form" action="<?php echo base_url()."admin/admin_delete_user"?>"  method="POST">
+                        <fieldset>
+                        <div class="control-group">
+                        <!-- E-mail -->
+                            <label class="control-label" for="email">E-mail</label>
+                            <div class="controls">
+                                <input type="text" id="email" name="email" placeholder="" class="input-xlarge" type="email">
+                                <p class="help-block" id ="email_msg"></p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" form="register_form" name="submit" class="btn btn-success">Confirm Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+		
+		
     </div>
     <!-- /#wrapper -->
 

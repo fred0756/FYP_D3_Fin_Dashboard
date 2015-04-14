@@ -75,7 +75,7 @@
                     <ul class="dropdown-menu dropdown-user">
                         <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Change Password</a>
                         </li>
                         <li class="divider"></li>
                         <li><a href='<?php echo base_url()."main/logout"?>'><i class="fa fa-sign-out fa-fw"></i> Logout</a>
@@ -106,12 +106,7 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
-                        </li>
+
 
                     </ul>
                 </div>
@@ -122,6 +117,15 @@
 
         <!-- Page Content -->
         <div id="page-wrapper">
+		
+			<div class="row">
+                <div class="col-lg-12">
+                        <div class="panel-body">
+                            <h3>Portfolio Detail</h3>
+                            <p>Review Performance dashboard or manage your portfolio here.</p>
+						</div>
+				</div>
+			</div>
 						<div class="table-responsive">
 				<table class="table table-bordered" id="portfolio_table">
 					<thead>
